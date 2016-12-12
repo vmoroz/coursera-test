@@ -13,12 +13,16 @@ function NarrowItDownController(MenuSearchService) {
 
   search.searchTerm = "";
   search.found = [];
+  search.error = "";
 
   search.find = function() {
+    search.error = "";
     MenuSearchService.getMatchedMenuItems(search.searchTerm)
     .then(function(foundItems) {
       search.found = foundItems;
-      console.debug(search.found);
+      if (search.found.length === 0) {
+        search.error = "Nothing found";
+      }
     });
   }
 
@@ -56,6 +60,7 @@ function FoundItemsDirective() {
     templateUrl: 'foundItems.html',
     scope: {
        items: '<',
+       error: '<',
        onRemove: '&'
     },
     controller: FoundItemsDirectiveController,
@@ -67,12 +72,6 @@ function FoundItemsDirective() {
 }
 
 function FoundItemsDirectiveController() {
-  var list = this;
-  var isFirst = true;
-
-  list.isEmpty = function() {
-    return list.items.length === 0;
-  };
 }
 
 })();
